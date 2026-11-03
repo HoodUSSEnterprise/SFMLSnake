@@ -117,7 +117,7 @@ Point Food::GetPos() const
 
 void Food::DrawFood(sf::RenderWindow &window)
 {
-    food_sprite.setPosition(pos.x * CELL_SIZE, pos.y * CELL_SIZE);
+    food_sprite.setPosition((sf::Vector2f)pos);
     window.draw(food_sprite);
 }
 
@@ -131,7 +131,7 @@ bool Food::CheckIsOnSnake(const Snake &snake)
     auto snake_body = snake.GetSnakeBody();
     for (auto &item : snake_body)
     {
-        if (item.x == pos.x && item.y == pos.y)
+        if (item == pos)
         {
             return true;
         }
@@ -154,7 +154,7 @@ void Snake::DrawSnake(sf::RenderWindow &window)
 {
     for (auto &item : body)
     {
-        snake_sprite.setPosition(item.x * CELL_SIZE, item.y * CELL_SIZE);
+        snake_sprite.setPosition((sf::Vector2f)item);
         window.draw(snake_sprite);
     }
 }
@@ -168,13 +168,11 @@ void DrawGameBorad(sf::RenderWindow &window)
 void Snake::Move()
 {
     dir = next_dir;
-    snake_tail.x = body.back().x;
-    snake_tail.y = body.back().y;
+    snake_tail = body.back();
 
     for (int i = body.size() - 1; i >= 1; i--)
     {
-        body[i].x = body[i - 1].x;
-        body[i].y = body[i - 1].y;
+        body[i] = body[i - 1];
     }
 
     body[0].x += dir_table[dir][0];
